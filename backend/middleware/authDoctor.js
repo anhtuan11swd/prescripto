@@ -2,15 +2,17 @@ import jwt from "jsonwebtoken";
 
 const authDoctor = async (req, res, next) => {
   try {
-    const { dtoken } = req.headers;
-    if (!dtoken) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.json({
         message: "Chưa được xác thực, vui lòng đăng nhập lại",
         success: false,
       });
     }
 
-    const token_decode = jwt.verify(dtoken, process.env.JWT_SECRET);
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const token_decode = jwt.verify(token, process.env.JWT_SECRET);
     req.body.docId = token_decode.id;
     next();
   } catch (error) {

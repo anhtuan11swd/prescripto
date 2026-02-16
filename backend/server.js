@@ -4,6 +4,7 @@ import "dotenv/config";
 import connectCloudinary from "./config/cloudinary.js";
 import connectDB from "./config/mongodb.js";
 import adminRoute from "./routes/adminRoute.js";
+import doctorRoute from "./routes/doctorRoute.js";
 import userRoute from "./routes/userRoute.js";
 import seedDoctors from "./seeds/doctor.js";
 
@@ -25,6 +26,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/admin", adminRoute);
+app.use("/api/doctor", doctorRoute);
 app.use("/api/user", userRoute);
 
 app.listen(port, () => console.log("Server đã khởi động trên PORT:", port));
