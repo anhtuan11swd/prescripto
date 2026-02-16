@@ -21,7 +21,12 @@ const loginAdmin = async (req, res) => {
         process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD,
         process.env.JWT_SECRET,
       );
-      return res.json({ success: true, token });
+      return res.json({
+        admin: { email: process.env.ADMIN_EMAIL },
+        message: "Đăng nhập thành công",
+        success: true,
+        token,
+      });
     }
     res.json({ message: "Thông tin đăng nhập không đúng", success: false });
   } catch (error) {
@@ -56,9 +61,10 @@ const addDoctor = async (req, res) => {
       !experience ||
       !about ||
       !fees ||
-      !address
+      !address ||
+      !imageFile
     ) {
-      return res.json({ message: "Thiếu thông tin", success: false });
+      return res.json({ message: "Thiếu thông tin hoặc ảnh", success: false });
     }
     if (!validator.isEmail(email)) {
       return res.json({ message: "Email không hợp lệ", success: false });
@@ -73,9 +79,12 @@ const addDoctor = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
-      resource_type: "image",
-    });
+    const imageUpload = await cloudinary.uploader.upload(
+      `data:${imageFile.mimetype};base64,${imageFile.buffer.toString("base64")}`,
+      {
+        resource_type: "image",
+      },
+    );
 
     const doctorData = {
       about,
@@ -92,9 +101,19 @@ const addDoctor = async (req, res) => {
     };
 
     const newDoctor = new doctorModel(doctorData);
-    await newDoctor.save();
+    const savedDoctor = await newDoctor.save();
 
-    res.json({ message: "Đã thêm bác sĩ", success: true });
+    res.json({
+      doctor: {
+        available: savedDoctor.available,
+        email: savedDoctor.email,
+        id: savedDoctor._id,
+        name: savedDoctor.name,
+        speciality: savedDoctor.speciality,
+      },
+      message: "Đã thêm bác sĩ thành công",
+      success: true,
+    });
   } catch (error) {
     res.json({ message: error.message, success: false });
   }
@@ -119,10 +138,21 @@ const changeAvailability = async (req, res) => {
   try {
     const { docId } = req.body;
     const docData = await doctorModel.findById(docId);
+    const newAvailability = !docData.available;
+
     await doctorModel.findByIdAndUpdate(docId, {
-      available: !docData.available,
+      available: newAvailability,
     });
-    res.json({ message: "Đã đổi trạng thái khả dụng", success: true });
+
+    res.json({
+      doctor: {
+        available: newAvailability,
+        id: docId,
+        name: docData.name,
+      },
+      message: "Đã đổi trạng thái khả dụng",
+      success: true,
+    });
   } catch (error) {
     res.json({ message: error.message, success: false });
   }
@@ -162,7 +192,16 @@ const appointmentCancel = async (req, res) => {
     }
     await doctorModel.findByIdAndUpdate(docId, { slotsBooked });
 
-    res.json({ message: "Đã hủy lịch hẹn", success: true });
+    res.json({
+      appointment: {
+        cancelled: true,
+        id: appointmentId,
+        slotDate: slotDate,
+        slotTime: slotTime,
+      },
+      message: "Đã hủy lịch hẹn thành công",
+      success: true,
+    });
   } catch (error) {
     res.json({ message: error.message, success: false });
   }
@@ -181,14 +220,38 @@ const adminDashboard = async (_req, res) => {
 
     const latestAppointments = [...appointments].reverse().slice(0, 5);
 
+    // Thống kê bổ sung
+    const totalRevenue = appointments
+      .filter((apt) => !apt.cancelled && apt.isCompleted)
+      .reduce((sum, apt) => sum + apt.amount, 0);
+
+    const cancelledAppointments = appointments.filter(
+      (apt) => apt.cancelled,
+    ).length;
+    const completedAppointments = appointments.filter(
+      (apt) => apt.isCompleted,
+    ).length;
+    const pendingAppointments = appointments.filter(
+      (apt) => !apt.cancelled && !apt.isCompleted,
+    ).length;
+
     const dashData = {
       appointments: appointments.length,
+      cancelledAppointments,
+      completedAppointments,
       doctors: doctors.length,
+      earnings: totalRevenue,
       latestAppointments,
       patients: users.length,
+      pendingAppointments,
+      totalRevenue,
     };
 
-    res.json({ dashData, success: true });
+    res.json({
+      dashData,
+      message: "Lấy dữ liệu dashboard thành công",
+      success: true,
+    });
   } catch (error) {
     res.json({ message: error.message, success: false });
   }

@@ -4,11 +4,17 @@ import "dotenv/config";
 import connectCloudinary from "./config/cloudinary.js";
 import connectDB from "./config/mongodb.js";
 import adminRoute from "./routes/adminRoute.js";
+import seedDoctors from "./seeds/doctor.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
-connectDB();
+
+// Kết nối database và cloudinary
+await connectDB();
 connectCloudinary();
+
+// Seed dữ liệu bác sĩ nếu database rỗng
+await seedDoctors();
 
 app.use(express.json());
 app.use(cors());
