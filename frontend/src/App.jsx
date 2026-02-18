@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import About from "./pages/About";
 import Appointment from "./pages/Appointment";
@@ -24,6 +25,7 @@ const App = () => {
         <Route element={<MyAppointments />} path="/my-appointments" />
         <Route element={<Appointment />} path="/appointment/:docId" />
       </Routes>
+      <Footer />
     </div>
   );
 };
