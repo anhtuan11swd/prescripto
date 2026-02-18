@@ -10,7 +10,7 @@ const SpecialityMenu = () => {
       id="speciality"
     >
       <h1 className="font-medium text-3xl">Tìm kiếm theo chuyên khoa</h1>
-      <p className="sm:w-1/3 text-sm text-center">
+      <p className="sm:w-1/3 text-sm text-center whitespace-nowrap">
         Khám phá danh sách bác sĩ chuyên nghiệp và đặt lịch khám dễ dàng.
       </p>
       <div className="[&::-webkit-scrollbar]:hidden flex sm:justify-center gap-4 pt-5 w-full overflow-scroll">

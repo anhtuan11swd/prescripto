@@ -39,7 +39,7 @@ const TopDoctors = () => {
                   aria-hidden
                   className="bg-green-500 rounded-full w-2 h-2 shrink-0"
                 />
-                <span>Có sẵn</span>
+                <span>Còn trống lịch</span>
               </div>
               <p className="font-medium text-[#262626] text-lg">{item.name}</p>
               <p className="text-[#5C5C5C] text-sm">{item.speciality}</p>
