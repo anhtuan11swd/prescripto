@@ -1,17 +1,18 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { doctors } from "../assets/assets";
+import { AppContext } from "../context/AppContextContext";
 import DoctorCard from "./DoctorCard";
 
 const RelatedDoctors = ({ docId, speciality }) => {
   const navigate = useNavigate();
+  const { doctors } = useContext(AppContext);
 
   const related = useMemo(
     () =>
-      doctors
+      (doctors || [])
         .filter((doc) => doc.speciality === speciality && doc._id !== docId)
         .slice(0, 5),
-    [docId, speciality],
+    [docId, doctors, speciality],
   );
 
   if (!related.length) return null;

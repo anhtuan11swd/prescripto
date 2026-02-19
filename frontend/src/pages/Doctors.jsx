@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { doctors, specialityData } from "../assets/assets";
+import { specialityData } from "../assets/assets";
 import DoctorCard from "../components/DoctorCard";
+import { AppContext } from "../context/AppContextContext";
 
 const Doctors = () => {
   const { speciality } = useParams();
   const navigate = useNavigate();
+  const { doctors } = useContext(AppContext);
   const [showFilter, setShowFilter] = useState(false);
 
+  const allDoctors = doctors || [];
+
   const filteredDoctors = speciality
-    ? doctors.filter((doc) => doc.speciality === speciality)
-    : doctors;
+    ? allDoctors.filter((doc) => doc.speciality === speciality)
+    : allDoctors;
 
   return (
     <div>
@@ -63,6 +67,11 @@ const Doctors = () => {
               onClick={() => navigate(`/appointment/${item._id}`)}
             />
           ))}
+          {!filteredDoctors.length && (
+            <p className="col-span-full py-4 text-center text-gray-500 text-sm">
+              Hiện chưa có bác sĩ nào phù hợp bộ lọc.
+            </p>
+          )}
         </div>
       </div>
     </div>

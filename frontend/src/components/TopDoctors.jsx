@@ -1,5 +1,6 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { doctors } from "../assets/assets.js";
+import { AppContext } from "../context/AppContextContext";
 import DoctorCard from "./DoctorCard";
 
 /**
@@ -7,13 +8,16 @@ import DoctorCard from "./DoctorCard";
  */
 const TopDoctors = () => {
   const navigate = useNavigate();
-  const list = doctors.slice(0, 10);
+  const { doctors } = useContext(AppContext);
+  const list = (doctors || []).slice(0, 10);
 
   const handleCardClick = (id) => () => navigate(`/appointment/${id}`);
   const handleMore = () => {
     window.scrollTo(0, 0);
     navigate("/doctors");
   };
+
+  if (!list.length) return null;
 
   return (
     <div className="flex flex-col items-center gap-4 md:mx-10 my-16 text-[#262626]">

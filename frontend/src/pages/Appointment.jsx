@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { assets, doctors } from "../assets/assets";
+import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
+import { AppContext } from "../context/AppContextContext";
 import {
   getVietnameseTimeLabel,
   getVietnameseWeekdayLabel,
@@ -9,6 +10,7 @@ import {
 
 const Appointment = () => {
   const { docId } = useParams();
+  const { doctors, formatCurrency } = useContext(AppContext);
 
   useEffect(() => {
     window.scrollTo({ behavior: "smooth", top: 0 });
@@ -18,8 +20,8 @@ const Appointment = () => {
   const [slotTime, setSlotTime] = useState("");
 
   const docInfo = useMemo(
-    () => doctors.find((doc) => doc._id === docId),
-    [docId],
+    () => (doctors || []).find((doc) => doc._id === docId),
+    [docId, doctors],
   );
 
   const docSlots = useMemo(() => {
@@ -90,6 +92,14 @@ const Appointment = () => {
     });
   };
 
+  if (!doctors || !doctors.length) {
+    return (
+      <div className="px-4 sm:px-10 py-10 text-gray-600 text-center">
+        Đang tải thông tin bác sĩ...
+      </div>
+    );
+  }
+
   if (!docInfo) {
     return (
       <div className="px-4 sm:px-10 py-10 text-gray-600 text-center">
@@ -140,7 +150,9 @@ const Appointment = () => {
           <p className="mt-4 font-medium text-gray-600">
             Phí khám:{" "}
             <span className="text-gray-800">
-              {docInfo.fees.toLocaleString("vi-VN")} VND
+              {formatCurrency
+                ? formatCurrency(docInfo.fees)
+                : `${docInfo.fees ?? 0} VND`}
             </span>
           </p>
         </div>
