@@ -1,35 +1,65 @@
-import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AppContext } from "../context/AppContextContext";
 
 /**
  * Trang Login/Sign Up.
  */
 const Login = () => {
   const navigate = useNavigate();
+  const { backendURL, token, setToken } = useContext(AppContext);
 
-  const [state, setState] = useState("Login"); // trạng thái form: 'Sign Up' | 'Login'
+  const [state, setState] = useState("Login"); // 'Sign Up' | 'Login'
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
-
-  const isLogin = useMemo(() => state === "Login", [state]);
 
   useEffect(() => {
     if (token) navigate("/");
   }, [token, navigate]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
 
-    // TODO: Tích hợp API thật. Hiện demo: set token giả để test redirect.
-    const nextToken = "demo-token";
-    localStorage.setItem("token", nextToken);
-    setToken(nextToken);
+    try {
+      if (state === "Sign Up") {
+        const { data } = await axios.post(`${backendURL}/api/user/register`, {
+          email,
+          name,
+          password,
+        });
+
+        if (data?.success) {
+          toast.success("Đăng ký thành công, vui lòng đăng nhập");
+          setState("Login");
+          setPassword("");
+        } else {
+          toast.error(data?.message || "Đăng ký thất bại");
+        }
+      } else {
+        const { data } = await axios.post(`${backendURL}/api/user/login`, {
+          email,
+          password,
+        });
+
+        if (data?.success && data?.token) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+        } else {
+          toast.error(data?.message || "Đăng nhập thất bại");
+        }
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
   };
 
+  const isLogin = state === "Login";
+
   return (
-    <form className="flex items-center min-h-[80vh]" onSubmit={handleSubmit}>
+    <form className="flex items-center min-h-[80vh]" onSubmit={onSubmitHandler}>
       <div className="flex flex-col items-start gap-3 shadow-lg m-auto p-8 border rounded-xl min-w-[340px] sm:min-w-96 text-[#5E5E5E] text-sm">
         <p className="font-semibold text-2xl">
           {isLogin ? "Đăng nhập" : "Tạo tài khoản"}
@@ -40,7 +70,7 @@ const Login = () => {
             : "Vui lòng đăng ký để đặt lịch khám"}
         </p>
 
-        {!isLogin && (
+        {state === "Sign Up" && (
           <div className="w-full">
             <p>Họ và tên</p>
             <input

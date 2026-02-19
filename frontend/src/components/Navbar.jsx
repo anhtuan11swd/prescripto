@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContextContext";
 
 /**
  * Navbar hiển thị logo, menu, nút đăng nhập và dropdown profile.
  */
 const Navbar = () => {
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const { token, setToken } = useContext(AppContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -17,9 +18,8 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    // Đăng xuất: clear token và điều hướng về trang chủ
-    localStorage.removeItem("token");
-    setToken(null);
+    // Đăng xuất: clear token qua AppContext và điều hướng về trang chủ
+    setToken("");
     setIsProfileOpen(false);
     navigate("/");
   };
