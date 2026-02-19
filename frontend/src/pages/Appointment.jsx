@@ -1,5 +1,7 @@
+import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
 import { AppContext } from "../context/AppContextContext";
@@ -9,13 +11,16 @@ import {
 } from "../utils/dateDisplay";
 
 const Appointment = () => {
+  const navigate = useNavigate();
   const { docId } = useParams();
-  const { doctors, formatCurrency } = useContext(AppContext);
+  const { backendURL, doctors, formatCurrency, getDoctorsData, token } =
+    useContext(AppContext);
 
   useEffect(() => {
     window.scrollTo({ behavior: "smooth", top: 0 });
   }, []);
 
+  const [booking, setBooking] = useState(false);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
 
@@ -27,6 +32,7 @@ const Appointment = () => {
   const docSlots = useMemo(() => {
     if (!docInfo) return [];
 
+    const bookedMap = docInfo.slotsBooked || docInfo.slots_booked || {};
     const today = new Date();
     const slotsByDay = [];
 
@@ -58,13 +64,13 @@ const Appointment = () => {
           minute: "2-digit",
         });
 
-        const isBooked =
-          docInfo.slots_booked?.[slotDate]?.includes(slotTimeStr);
+        const isBooked = bookedMap?.[slotDate]?.includes(slotTimeStr);
 
         if (!isBooked) {
           timeSlots.push({
             datetime: new Date(currentDate),
             displayTime: getVietnameseTimeLabel(currentDate),
+            slotDate,
             time: slotTimeStr,
           });
         }
@@ -78,18 +84,41 @@ const Appointment = () => {
     return slotsByDay;
   }, [docInfo]);
 
-  const bookAppointment = () => {
-    if (!docInfo || !docSlots[slotIndex]) return;
+  const bookAppointment = async () => {
+    if (!docInfo || !docSlots[slotIndex] || !slotTime) return;
+    if (!token) {
+      toast.info("Vui lòng đăng nhập để đặt lịch");
+      navigate("/login");
+      return;
+    }
+
     const selected = docSlots[slotIndex].find((s) => s.time === slotTime);
     if (!selected) return;
 
-    // TODO: Tích hợp API/bookAppointment thực tế
-    // Tạm thời chỉ log ra console để kiểm tra
-    console.log("Booking appointment:", {
-      datetime: selected.datetime,
-      doctorId: docInfo._id,
-      time: selected.time,
-    });
+    try {
+      setBooking(true);
+      const { data } = await axios.post(
+        `${backendURL}/api/user/book-appointment`,
+        {
+          docId: docInfo._id,
+          slotDate: selected.slotDate,
+          slotTime: selected.time,
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      if (data?.success) {
+        toast.success(data.message || "Đặt lịch thành công");
+        if (getDoctorsData) await getDoctorsData();
+        navigate("/my-appointments");
+      } else {
+        toast.error(data?.message || "Đặt lịch thất bại");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    } finally {
+      setBooking(false);
+    }
   };
 
   if (!doctors || !doctors.length) {
@@ -150,9 +179,13 @@ const Appointment = () => {
           <p className="mt-4 font-medium text-gray-600">
             Phí khám:{" "}
             <span className="text-gray-800">
-              {formatCurrency
-                ? formatCurrency(docInfo.fees)
-                : `${docInfo.fees ?? 0} VND`}
+              {(() => {
+                const fee =
+                  typeof docInfo.fee !== "undefined"
+                    ? docInfo.fee
+                    : (docInfo.fees ?? 0);
+                return formatCurrency ? formatCurrency(fee) : `${fee} VND`;
+              })()}
             </span>
           </p>
         </div>
@@ -223,11 +256,11 @@ const Appointment = () => {
 
         <button
           className="bg-primary disabled:opacity-60 my-6 px-20 py-3 rounded-full font-light text-white text-sm disabled:cursor-not-allowed"
-          disabled={!slotTime || !currentDaySlots.length}
+          disabled={!slotTime || !currentDaySlots.length || booking}
           onClick={bookAppointment}
           type="button"
         >
-          Đặt lịch hẹn ngay
+          {booking ? "Đang đặt..." : "Đặt lịch hẹn ngay"}
         </button>
       </div>
 
