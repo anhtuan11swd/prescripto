@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.userId; // Lấy từ req thay vì req.body
     const userData = await userModel.findById(userId).select("-password");
     res.json({ success: true, userData });
   } catch (error) {
@@ -71,7 +71,8 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { userId, name, phone, address, dob, gender } = req.body;
+    const userId = req.userId;
+    const { name, phone, address, dob, gender } = req.body;
     const imageFile = req.file;
 
     if (!name || !phone || !dob || !gender) {
@@ -85,6 +86,7 @@ const updateProfile = async (req, res) => {
       name,
       phone,
     };
+
     await userModel.findByIdAndUpdate(userId, updatePayload);
 
     if (imageFile) {
@@ -98,19 +100,22 @@ const updateProfile = async (req, res) => {
     }
 
     const updatedUser = await userModel.findById(userId).select("-password");
+
     res.json({
       message: "Đã cập nhật hồ sơ",
       success: true,
       user: updatedUser,
     });
   } catch (error) {
+    console.error("Lỗi trong hàm updateProfile:", error);
     res.json({ message: error.message, success: false });
   }
 };
 
 const bookAppointment = async (req, res) => {
   try {
-    const { userId, docId, slotDate, slotTime } = req.body;
+    const userId = req.userId; // Lấy từ req thay vì req.body
+    const { docId, slotDate, slotTime } = req.body;
 
     const docData = await doctorModel.findById(docId).select("-password");
     if (!docData) {
@@ -164,7 +169,7 @@ const bookAppointment = async (req, res) => {
 
 const listAppointment = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.userId; // Lấy từ req thay vì req.body
     const appointments = await appointmentModel.find({ userId });
     res.json({ appointments, success: true });
   } catch (error) {
@@ -174,7 +179,8 @@ const listAppointment = async (req, res) => {
 
 const cancelAppointment = async (req, res) => {
   try {
-    const { userId, appointmentId } = req.body;
+    const userId = req.userId; // Lấy từ req thay vì req.body
+    const { appointmentId } = req.body;
     const appointmentData = await appointmentModel.findById(appointmentId);
 
     if (!appointmentData) {

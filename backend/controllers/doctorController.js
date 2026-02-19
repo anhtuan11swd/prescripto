@@ -53,7 +53,7 @@ const loginDoctor = async (req, res) => {
 // API lấy danh sách cuộc hẹn của bác sĩ
 const appointmentsDoctor = async (req, res) => {
   try {
-    const { docId } = req.body; // From authDoctor middleware
+    const docId = req.docId; // Từ middleware authDoctor
 
     const appointments = await appointmentModel.find({ docId });
 
@@ -70,7 +70,8 @@ const appointmentsDoctor = async (req, res) => {
 // API đánh dấu cuộc hẹn hoàn thành
 const appointmentComplete = async (req, res) => {
   try {
-    const { docId, appointmentId } = req.body;
+    const docId = req.docId; // Từ middleware authDoctor
+    const { appointmentId } = req.body;
     const appointmentData = await appointmentModel.findById(appointmentId);
 
     if (appointmentData && appointmentData.docId === docId) {
@@ -88,7 +89,8 @@ const appointmentComplete = async (req, res) => {
 // API hủy cuộc hẹn
 const appointmentCancel = async (req, res) => {
   try {
-    const { docId, appointmentId } = req.body;
+    const docId = req.docId; // Từ middleware authDoctor
+    const { appointmentId } = req.body;
     const appointmentData = await appointmentModel.findById(appointmentId);
 
     if (appointmentData && appointmentData.docId === docId) {
@@ -106,7 +108,7 @@ const appointmentCancel = async (req, res) => {
 // API dashboard bác sĩ
 const doctorDashboard = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const docId = req.docId; // Từ middleware authDoctor
     const appointments = await appointmentModel.find({ docId });
 
     let earnings = 0;
@@ -153,7 +155,7 @@ const doctorDashboard = async (req, res) => {
 // API lấy thông tin profile bác sĩ
 const doctorProfile = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const docId = req.docId; // Từ middleware authDoctor
 
     const profileData = await doctorModel.findById(docId).select("-password");
 
@@ -166,7 +168,8 @@ const doctorProfile = async (req, res) => {
 // API cập nhật profile bác sĩ
 const updateDoctorProfile = async (req, res) => {
   try {
-    const { docId, fees, address, available } = req.body;
+    const docId = req.docId; // From authDoctor middleware
+    const { fees, address, available } = req.body;
 
     await doctorModel.findByIdAndUpdate(docId, {
       address,

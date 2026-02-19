@@ -11,9 +11,9 @@ const authDoctor = async (req, res, next) => {
       });
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const token = authHeader.substring(7); // Loại bỏ tiền tố "Bearer "
     const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-    req.body.docId = token_decode.id;
+    req.docId = token_decode.id; // Lưu vào req thay vì req.body
     next();
   } catch (error) {
     console.log(error);

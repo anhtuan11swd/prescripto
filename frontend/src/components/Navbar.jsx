@@ -7,7 +7,7 @@ import { AppContext } from "../context/AppContextContext";
  * Navbar hiển thị logo, menu, nút đăng nhập và dropdown profile.
  */
 const Navbar = () => {
-  const { token, setToken } = useContext(AppContext);
+  const { token, setToken, userData } = useContext(AppContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const Navbar = () => {
         }}
         type="button"
       >
-        <img alt="Prescripto" className="w-44" src={assets.logo} />
+        <img alt="Logo Prescripto" className="w-44" src={assets.logo} />
       </button>
 
       {/* Desktop menu */}
@@ -89,12 +89,15 @@ const Navbar = () => {
               type="button"
             >
               <img
-                alt="Profile"
+                alt="Ảnh hồ sơ"
                 className="w-9 h-9 rounded-full object-cover cursor-pointer"
-                src={assets.profile_pic}
+                src={userData?.image || assets.profile_pic}
               />
+              <span className="text-sm font-medium max-w-[140px] truncate">
+                {userData?.name || "Tài khoản"}
+              </span>
               <img
-                alt="Toggle profile menu"
+                alt="Mở menu hồ sơ"
                 className="w-3"
                 src={assets.dropdown_icon}
               />
@@ -140,7 +143,7 @@ const Navbar = () => {
           onClick={() => setIsMobileMenuOpen(true)}
           type="button"
         >
-          <img alt="Open menu" className="w-6" src={assets.menu_icon} />
+          <img alt="Mở menu" className="w-6" src={assets.menu_icon} />
         </button>
       </div>
 
@@ -151,9 +154,9 @@ const Navbar = () => {
         }`}
       >
         <div className="flex items-center justify-between px-5 py-6 border-b border-gray-200">
-          <img alt="Prescripto" className="w-36" src={assets.logo} />
+          <img alt="Logo Prescripto" className="w-36" src={assets.logo} />
           <button onClick={() => setIsMobileMenuOpen(false)} type="button">
-            <img alt="Close menu" className="w-7" src={assets.cross_icon} />
+            <img alt="Đóng menu" className="w-7" src={assets.cross_icon} />
           </button>
         </div>
 
