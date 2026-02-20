@@ -8,6 +8,9 @@ import AddDoctor from "./pages/Admin/AddDoctor";
 import AllAppointments from "./pages/Admin/AllAppointments";
 import Dashboard from "./pages/Admin/Dashboard";
 import DoctorsList from "./pages/Admin/DoctorsList";
+import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
+import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
+import DoctorProfile from "./pages/Doctor/DoctorProfile";
 import Login from "./pages/Login";
 
 // Component bảo vệ route - chuyển hướng về login nếu chưa đăng nhập
@@ -47,6 +50,10 @@ function App() {
           <Route element={<AllAppointments />} path="/all-appointments" />
           <Route element={<AddDoctor />} path="/add-doctor" />
           <Route element={<DoctorsList />} path="/doctor-list" />
+          {/* Doctor Routes */}
+          <Route element={<DoctorDashboard />} path="/doc-dashboard" />
+          <Route element={<DoctorAppointments />} path="/doc-appointments" />
+          <Route element={<DoctorProfile />} path="/doc-profile" />
         </Route>
       </Routes>
     </div>

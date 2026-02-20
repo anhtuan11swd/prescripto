@@ -1,19 +1,27 @@
-import { createContext, useState } from "react";
+import { useState } from "react";
 
-const DoctorContext = createContext();
+import { DoctorContext } from "./DoctorContext.context";
 
 const DoctorContextProvider = (props) => {
-  // State lưu token bác sĩ từ localStorage
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [dToken, setDToken] = useState(
     localStorage.getItem("dToken") ? localStorage.getItem("dToken") : "",
   );
-
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [appointments, setAppointments] = useState([]);
+  const [dashData, setDashData] = useState(false);
+  const [profileData, setProfileData] = useState(false);
 
   const value = {
+    appointments,
     backendUrl,
+    dashData,
     dToken,
+    profileData,
+    setAppointments,
+    setDashData,
     setDToken,
+    setProfileData,
   };
 
   return (
@@ -23,5 +31,4 @@ const DoctorContextProvider = (props) => {
   );
 };
 
-export { DoctorContext };
 export default DoctorContextProvider;
