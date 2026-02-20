@@ -22,4 +22,5 @@ const DoctorContextProvider = (props) => {
   );
 };
 
+export { DoctorContext };
 export default DoctorContextProvider;
