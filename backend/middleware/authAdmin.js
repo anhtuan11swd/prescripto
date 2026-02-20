@@ -12,7 +12,12 @@ const authAdmin = async (req, res, next) => {
 
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
     const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-    if (token_decode !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
+
+    // Verify admin role from token payload
+    if (
+      token_decode.role !== "admin" ||
+      token_decode.email !== process.env.ADMIN_EMAIL
+    ) {
       return res.json({
         message: "Chưa được xác thực, vui lòng đăng nhập lại",
         success: false,

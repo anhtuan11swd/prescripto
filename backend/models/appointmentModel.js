@@ -14,6 +14,11 @@ const appointmentSchema = new mongoose.Schema({
   userId: { required: true, type: String },
 });
 
+// Indexes for frequently queried fields
+appointmentSchema.index({ docId: 1, slotDate: 1 });
+appointmentSchema.index({ userId: 1 });
+appointmentSchema.index({ date: -1 });
+
 const appointmentModel =
   mongoose.models.appointment ||
   mongoose.model("appointment", appointmentSchema);

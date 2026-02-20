@@ -19,6 +19,11 @@ const doctorSchema = new mongoose.Schema(
   { minimize: false },
 );
 
+// Indexes for frequently queried fields
+doctorSchema.index({ email: 1 });
+doctorSchema.index({ speciality: 1 });
+doctorSchema.index({ available: 1 });
+
 const doctorModel =
   mongoose.models.doctor || mongoose.model("doctor", doctorSchema);
 

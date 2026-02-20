@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema({
   phone: { default: "0000000000", type: String },
 });
 
+// Index for frequently queried fields
+userSchema.index({ email: 1 });
+
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 
 export default userModel;

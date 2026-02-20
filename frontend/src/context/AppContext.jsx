@@ -3,6 +3,23 @@ import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import { AppContext } from "./AppContextContext";
 
+// Configure axios defaults with retry for cold start on Render free tier
+axios.defaults.timeout = 60000; // 60 seconds for server cold start
+
+// Add retry interceptor
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    // Retry once on timeout for cold start
+    if (error.code === "ECONNABORTED" && !originalRequest._retry) {
+      originalRequest._retry = true;
+      return axios(originalRequest);
+    }
+    return Promise.reject(error);
+  },
+);
+
 // Mảng tháng tiếng Việt để format slotDate từ backend (format: "ngày_tháng_năm")
 const months = [
   "",
