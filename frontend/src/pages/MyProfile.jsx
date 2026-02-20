@@ -183,8 +183,8 @@ const MyProfile = () => {
         await loadUserProfileData();
         setIsEditing(false);
       }
-    } catch (error) {
-      console.error("Lỗi cập nhật hồ sơ:", error);
+    } catch {
+      // Xử lý lỗi im lặng hoặc hiển thị thông báo cho người dùng
     }
   };
 

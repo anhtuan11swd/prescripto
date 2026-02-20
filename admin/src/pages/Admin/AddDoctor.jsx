@@ -171,11 +171,6 @@ const AddDoctor = () => {
         JSON.stringify({ line1: address1, line2: address2 }),
       );
 
-      // console log formdata
-      formData.forEach((value, key) => {
-        console.log(`${key} : ${value}`);
-      });
-
       const { data } = await axios.post(
         `${backendUrl}/api/admin/add-doctor`,
         formData,
@@ -202,7 +197,6 @@ const AddDoctor = () => {
       }
     } catch (error) {
       toast.error(error.message);
-      console.log(error);
     }
   };
 

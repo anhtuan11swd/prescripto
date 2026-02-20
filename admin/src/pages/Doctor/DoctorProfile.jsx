@@ -12,11 +12,6 @@ const DoctorProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   const updateProfile = async () => {
-    console.log("=== updateProfile được gọi ===");
-    console.log("dToken:", dToken);
-    console.log("backendUrl:", backendUrl);
-    console.log("profileData:", profileData);
-
     try {
       const updateData = {
         address: profileData.address,
@@ -24,15 +19,11 @@ const DoctorProfile = () => {
         fee: profileData.fee,
       };
 
-      console.log("updateData sẽ gửi:", updateData);
-
       const { data } = await axios.post(
         `${backendUrl}/api/doctor/update-profile`,
         updateData,
         { headers: { Authorization: `Bearer ${dToken}` } },
       );
-
-      console.log("Response từ server:", data);
 
       if (data.success) {
         toast.success(data.message);
@@ -172,7 +163,6 @@ const DoctorProfile = () => {
               <button
                 className="hover:bg-primary mt-5 px-4 py-1 border border-primary rounded-full hover:text-white text-sm transition-all"
                 onClick={() => {
-                  console.log("Nút Lưu được click");
                   updateProfile();
                 }}
                 type="button"
@@ -183,7 +173,6 @@ const DoctorProfile = () => {
               <button
                 className="hover:bg-primary mt-5 px-4 py-1 border border-primary rounded-full hover:text-white text-sm transition-all"
                 onClick={() => {
-                  console.log("Nút Chỉnh sửa được click");
                   setIsEdit(true);
                 }}
                 type="button"

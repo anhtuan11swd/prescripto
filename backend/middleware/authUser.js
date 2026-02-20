@@ -17,7 +17,6 @@ const authUser = async (req, res, next) => {
     req.userId = token_decode.id; // Lưu vào req thay vì req.body
     next();
   } catch (error) {
-    console.log(error);
     res.json({ message: error.message || "Lỗi xác thực", success: false });
   }
 };
