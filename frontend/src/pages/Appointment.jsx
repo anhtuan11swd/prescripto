@@ -181,9 +181,7 @@ const Appointment = () => {
             <span className="text-gray-800">
               {(() => {
                 const fee =
-                  typeof docInfo.fee !== "undefined"
-                    ? docInfo.fee
-                    : (docInfo.fees ?? 0);
+                  typeof docInfo.fee !== "undefined" ? docInfo.fee : 0;
                 return formatCurrency ? formatCurrency(fee) : `${fee} VND`;
               })()}
             </span>

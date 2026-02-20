@@ -12,7 +12,7 @@ const AddDoctor = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [experience, setExperience] = useState("1 năm");
-  const [fees, setFees] = useState("");
+  const [fee, setFee] = useState("");
   const [about, setAbout] = useState("");
   const [speciality, setSpeciality] = useState("Bác sĩ đa khoa");
   const [degree, setDegree] = useState("");
@@ -56,7 +56,7 @@ const AddDoctor = () => {
         }
         break;
 
-      case "fees":
+      case "fee":
         if (!value) {
           error = "Phí khám không được để trống";
         } else if (Number.isNaN(Number(value)) || Number(value) <= 0) {
@@ -117,7 +117,7 @@ const AddDoctor = () => {
     newErrors.name = validateField("name", name);
     newErrors.email = validateField("email", email);
     newErrors.password = validateField("password", password);
-    newErrors.fees = validateField("fees", fees);
+    newErrors.fee = validateField("fee", fee);
     newErrors.degree = validateField("degree", degree);
     newErrors.address1 = validateField("address1", address1);
     newErrors.address2 = validateField("address2", address2);
@@ -162,7 +162,7 @@ const AddDoctor = () => {
       formData.append("email", email);
       formData.append("password", password);
       formData.append("experience", experience);
-      formData.append("fees", Number(fees));
+      formData.append("fee", Number(fee));
       formData.append("about", about);
       formData.append("speciality", speciality);
       formData.append("degree", degree);
@@ -189,7 +189,7 @@ const AddDoctor = () => {
         setEmail("");
         setPassword("");
         setExperience("1 năm");
-        setFees("");
+        setFee("");
         setAbout("");
         setSpeciality("Bác sĩ đa khoa");
         setDegree("");
@@ -355,39 +355,36 @@ const AddDoctor = () => {
             </div>
 
             <div>
-              <label
-                className="block mb-2 text-gray-600 text-sm"
-                htmlFor="fees"
-              >
+              <label className="block mb-2 text-gray-600 text-sm" htmlFor="fee">
                 Phí khám
               </label>
               <input
                 autoComplete="off"
                 className={`w-full px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-1 ${
-                  errors.fees
+                  errors.fee
                     ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                     : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 }`}
-                id="fees"
+                id="fee"
                 max="5000000"
                 min="50000"
-                onBlur={(e) => handleFieldValidation("fees", e.target.value)}
-                onChange={(e) => setFees(e.target.value)}
+                onBlur={(e) => handleFieldValidation("fee", e.target.value)}
+                onChange={(e) => setFee(e.target.value)}
                 placeholder={`Ví dụ: 200000 (${formatCurrency(50000)} - ${formatCurrency(5000000)})`}
                 required
                 type="number"
-                value={fees}
+                value={fee}
               />
               <p className="mt-1 text-gray-500 text-xs">
                 Nhập số tiền bằng VND (không bao gồm ký hiệu tiền tệ)
               </p>
-              {fees && !errors.fees && (
+              {fee && !errors.fee && (
                 <p className="mt-1 text-green-600 text-xs">
-                  {formatCurrency(Number(fees))}
+                  {formatCurrency(Number(fee))}
                 </p>
               )}
-              {errors.fees && (
-                <p className="mt-1 text-red-600 text-xs">{errors.fees}</p>
+              {errors.fee && (
+                <p className="mt-1 text-red-600 text-xs">{errors.fee}</p>
               )}
             </div>
           </div>

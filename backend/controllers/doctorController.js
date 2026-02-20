@@ -169,12 +169,12 @@ const doctorProfile = async (req, res) => {
 const updateDoctorProfile = async (req, res) => {
   try {
     const docId = req.docId; // From authDoctor middleware
-    const { fees, address, available } = req.body;
+    const { fee, address, available } = req.body;
 
     await doctorModel.findByIdAndUpdate(docId, {
       address,
       available,
-      fees,
+      fee,
     });
 
     res.json({ message: "Hồ sơ đã được cập nhật", success: true });

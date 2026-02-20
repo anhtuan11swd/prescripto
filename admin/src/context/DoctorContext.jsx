@@ -31,6 +31,23 @@ const DoctorContextProvider = (props) => {
     // backendUrl is a constant from env, no need to include in deps
   }, [dToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Lấy dữ liệu hồ sơ của bác sĩ
+  const getProfileData = useCallback(async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/doctor/profile`, {
+        headers: { Authorization: `Bearer ${dToken}` },
+      });
+      if (data.success) {
+        setProfileData(data.profileData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    // backendUrl is a constant from env, no need to include in deps
+  }, [dToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Lấy danh sách tất cả lịch hẹn của bác sĩ
   const getAppointments = useCallback(async () => {
     try {
@@ -100,6 +117,7 @@ const DoctorContextProvider = (props) => {
     dToken,
     getAppointments,
     getDashData,
+    getProfileData,
     profileData,
     setAppointments,
     setDashData,

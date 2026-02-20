@@ -96,7 +96,7 @@ Content-Type: multipart/form-data
 - `degree`: Bác sĩ chuyên khoa
 - `experience`: 5 năm
 - `about`: Bác sĩ có kinh nghiệm trong điều trị bệnh nội khoa
-- `fees`: 500000
+- `fee`: 500000
 - `address`: {"line1": "123 Đường ABC", "line2": "Quận 1, TP.HCM"}
 - `image`: [Chọn file ảnh]
 

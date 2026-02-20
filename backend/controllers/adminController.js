@@ -47,7 +47,7 @@ const addDoctor = async (req, res) => {
       degree,
       experience,
       about,
-      fees,
+      fee,
       address,
     } = req.body;
     const imageFile = req.file;
@@ -60,7 +60,7 @@ const addDoctor = async (req, res) => {
       !degree ||
       !experience ||
       !about ||
-      !fees ||
+      !fee ||
       !address ||
       !imageFile
     ) {
@@ -93,7 +93,7 @@ const addDoctor = async (req, res) => {
       degree,
       email,
       experience,
-      fee: Number(fees),
+      fee: Number(fee),
       image: imageUpload.secure_url,
       name,
       password: hashedPassword,

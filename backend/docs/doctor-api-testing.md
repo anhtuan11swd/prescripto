@@ -212,7 +212,7 @@ Content-Type: application/json
 Authorization: Bearer <doctor_token>
 
 {
-  "fees": 60,
+  "fee": 60,
   "address": {
     "line1": "New Address Line 1",
     "line2": "New Address Line 2"
