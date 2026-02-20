@@ -31,6 +31,26 @@ const DoctorContextProvider = (props) => {
     // backendUrl is a constant from env, no need to include in deps
   }, [dToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Lấy danh sách tất cả lịch hẹn của bác sĩ
+  const getAppointments = useCallback(async () => {
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/doctor/appointments`,
+        {
+          headers: { Authorization: `Bearer ${dToken}` },
+        },
+      );
+      if (data.success) {
+        setAppointments(data.appointments.reverse());
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    // backendUrl is a constant from env, no need to include in deps
+  }, [dToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Hoàn thành lịch hẹn
   const completeAppointment = async (appointmentId) => {
     try {
@@ -42,6 +62,7 @@ const DoctorContextProvider = (props) => {
       if (data.success) {
         toast.success(data.message);
         getDashData();
+        getAppointments();
       } else {
         toast.error(data.message);
       }
@@ -61,6 +82,7 @@ const DoctorContextProvider = (props) => {
       if (data.success) {
         toast.success(data.message);
         getDashData();
+        getAppointments();
       } else {
         toast.error(data.message);
       }
@@ -76,6 +98,7 @@ const DoctorContextProvider = (props) => {
     completeAppointment,
     dashData,
     dToken,
+    getAppointments,
     getDashData,
     profileData,
     setAppointments,
