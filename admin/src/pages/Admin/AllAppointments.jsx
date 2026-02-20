@@ -9,6 +9,7 @@ const AllAppointments = () => {
   const { calculateAge, slotDateFormat, formatCurrency } =
     useContext(AppContext);
 
+  // Lấy danh sách lịch hẹn khi có token
   useEffect(() => {
     if (aToken) {
       getAllAppointments();

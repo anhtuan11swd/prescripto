@@ -6,6 +6,7 @@ import { AdminContext } from "../../context/AdminContext";
 import { AppContext } from "../../context/AppContext";
 
 const AddDoctor = () => {
+  // State quản lý form input
   const [docImg, setDocImg] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ const AddDoctor = () => {
   const { backendUrl, aToken, getAllDoctors } = useContext(AdminContext);
   const { formatCurrency } = useContext(AppContext);
 
-  // Validation functions
+  // Hàm validate từng trường input
   const validateField = (fieldName, value) => {
     let error = "";
 
@@ -108,6 +109,7 @@ const AddDoctor = () => {
     return error;
   };
 
+  // Validate toàn bộ form trước khi submit
   const validateForm = () => {
     const newErrors = {};
 
@@ -121,7 +123,7 @@ const AddDoctor = () => {
     newErrors.address2 = validateField("address2", address2);
     newErrors.about = validateField("about", about);
 
-    // Remove empty errors
+    // Xóa các error rỗng
     Object.keys(newErrors).forEach((key) => {
       if (!newErrors[key]) delete newErrors[key];
     });
@@ -130,7 +132,7 @@ const AddDoctor = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Validation handlers
+  // Xử lý validation khi blur khỏi input
   const handleFieldValidation = (fieldName, value) => {
     const error = validateField(fieldName, value);
     setErrors((prev) => ({
@@ -139,6 +141,7 @@ const AddDoctor = () => {
     }));
   };
 
+  // Xử lý submit form - gửi dữ liệu lên server
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 

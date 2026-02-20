@@ -3,6 +3,7 @@ import { createContext, useState } from "react";
 const DoctorContext = createContext();
 
 const DoctorContextProvider = (props) => {
+  // State lưu token bác sĩ từ localStorage
   const [dToken, setDToken] = useState(
     localStorage.getItem("dToken") ? localStorage.getItem("dToken") : "",
   );

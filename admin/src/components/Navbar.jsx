@@ -9,6 +9,7 @@ const Navbar = () => {
   const { dToken, setDToken } = useContext(DoctorContext);
   const navigate = useNavigate();
 
+  // Xử lý đăng xuất - xóa token và chuyển về trang chủ
   const logout = () => {
     navigate("/");
     if (aToken) {

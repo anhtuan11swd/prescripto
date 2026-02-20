@@ -3,6 +3,7 @@ import { assets } from "../../assets/assets";
 import { AdminContext } from "../../context/AdminContext";
 import { AppContext } from "../../context/AppContext";
 
+// Danh sách tháng tiếng Việt
 const MONTHS = [
   "",
   "tháng 1",
@@ -19,6 +20,7 @@ const MONTHS = [
   "tháng 12",
 ];
 
+// Chuyển đổi format ngày từ "ngày_tháng_năm" sang dạng hiển thị
 const slotDateFormat = (slotDate) => {
   if (!slotDate) return "";
   const dateArray = String(slotDate).split("_");
@@ -31,6 +33,7 @@ const Dashboard = () => {
     useContext(AdminContext);
   const { formatCurrency } = useContext(AppContext);
 
+  // Lấy dữ liệu dashboard khi có token
   useEffect(() => {
     if (aToken) getDashData();
   }, [aToken, getDashData]);

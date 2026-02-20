@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { AdminContext } from "../context/AdminContext";
 import { DoctorContext } from "../context/DoctorContext";
 
+// Thông tin đăng nhập mặc định
 const DEFAULT_ADMIN_EMAIL = "admin@prescripto.com";
 const DEFAULT_ADMIN_PASSWORD = "admin123";
 
@@ -21,10 +22,12 @@ const Login = () => {
   const { aToken, setAToken, backendUrl } = useContext(AdminContext);
   const { dToken, setDToken } = useContext(DoctorContext);
 
+  // Chuyển hướng nếu đã đăng nhập
   useEffect(() => {
     if (aToken || dToken) navigate("/", { replace: true });
   }, [aToken, dToken, navigate]);
 
+  // Xử lý đăng nhập - gọi API tương ứng với role
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {

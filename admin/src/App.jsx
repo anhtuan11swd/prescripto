@@ -10,6 +10,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import DoctorsList from "./pages/Admin/DoctorsList";
 import Login from "./pages/Login";
 
+// Component bảo vệ route - chuyển hướng về login nếu chưa đăng nhập
 const ProtectedRoute = ({ children }) => {
   const { aToken } = useContext(AdminContext);
   const { dToken } = useContext(DoctorContext);
@@ -17,6 +18,7 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Layout chung với Navbar và Sidebar
 const Layout = () => (
   <>
     <Navbar />

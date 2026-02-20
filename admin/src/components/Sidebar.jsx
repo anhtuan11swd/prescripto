@@ -4,6 +4,7 @@ import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import { DoctorContext } from "../context/DoctorContext";
 
+// Style cho link menu - thay đổi khi active
 const linkClass = ({ isActive }) =>
   `flex items-center gap-3 py-3 px-6 text-sm font-medium transition-colors ${
     isActive

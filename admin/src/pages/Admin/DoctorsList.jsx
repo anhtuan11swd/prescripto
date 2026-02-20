@@ -5,6 +5,7 @@ const DoctorsList = () => {
   const { doctors, aToken, getAllDoctors, changeAvailability } =
     useContext(AdminContext);
 
+  // Lấy danh sách bác sĩ khi có token
   useEffect(() => {
     if (aToken) {
       getAllDoctors();

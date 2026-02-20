@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 const AdminContext = createContext();
 
 const AdminContextProvider = (props) => {
+  // State lưu token admin từ localStorage
   const [aToken, setAToken] = useState(
     localStorage.getItem("aToken") ? localStorage.getItem("aToken") : "",
   );
@@ -14,6 +15,7 @@ const AdminContextProvider = (props) => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  // Lấy danh sách tất cả bác sĩ
   const getAllDoctors = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/all-doctors`, {
@@ -29,6 +31,7 @@ const AdminContextProvider = (props) => {
     }
   };
 
+  // Thay đổi trạng thái có sẵn của bác sĩ
   const changeAvailability = async (docId) => {
     try {
       const { data } = await axios.post(
@@ -47,6 +50,7 @@ const AdminContextProvider = (props) => {
     }
   };
 
+  // Lấy danh sách tất cả lịch hẹn
   const getAllAppointments = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/appointments`, {
@@ -62,6 +66,7 @@ const AdminContextProvider = (props) => {
     }
   };
 
+  // Hủy lịch hẹn
   const cancelAppointment = async (appointmentId) => {
     try {
       const { data } = await axios.post(
@@ -80,6 +85,7 @@ const AdminContextProvider = (props) => {
     }
   };
 
+  // Lấy dữ liệu thống kê cho dashboard
   const getDashData = useCallback(async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/dashboard`, {

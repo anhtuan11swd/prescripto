@@ -5,7 +5,7 @@ const AppContext = createContext();
 const AppContextProvider = (props) => {
   const currency = "₫";
 
-  // Format tiền tệ Việt Nam (VND)
+  // Format số tiền theo định dạng VND
   const formatCurrency = (amount) => {
     const numericAmount = typeof amount === "string" ? Number(amount) : amount;
     if (!Number.isFinite(numericAmount)) return `${amount ?? 0}${currency}`;
