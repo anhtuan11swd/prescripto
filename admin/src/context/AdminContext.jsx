@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 
 const AdminContext = createContext();
@@ -17,7 +17,7 @@ const AdminContextProvider = (props) => {
   const getAllDoctors = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/all-doctors`, {
-        headers: { Authorization: aToken },
+        headers: { Authorization: `Bearer ${aToken}` },
       });
       if (data.success) {
         setDoctors(data.doctors);
@@ -34,7 +34,7 @@ const AdminContextProvider = (props) => {
       const { data } = await axios.post(
         `${backendUrl}/api/admin/change-availability`,
         { docId },
-        { headers: { Authorization: aToken } },
+        { headers: { Authorization: `Bearer ${aToken}` } },
       );
       if (data.success) {
         toast.success(data.message);
@@ -50,7 +50,7 @@ const AdminContextProvider = (props) => {
   const getAllAppointments = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/appointments`, {
-        headers: { Authorization: aToken },
+        headers: { Authorization: `Bearer ${aToken}` },
       });
       if (data.success) {
         setAppointments(data.appointments.reverse());
@@ -67,7 +67,7 @@ const AdminContextProvider = (props) => {
       const { data } = await axios.post(
         `${backendUrl}/api/admin/cancel-appointment`,
         { appointmentId },
-        { headers: { Authorization: aToken } },
+        { headers: { Authorization: `Bearer ${aToken}` } },
       );
       if (data.success) {
         toast.success(data.message);
@@ -80,10 +80,10 @@ const AdminContextProvider = (props) => {
     }
   };
 
-  const getDashData = async () => {
+  const getDashData = useCallback(async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/dashboard`, {
-        headers: { Authorization: aToken },
+        headers: { Authorization: `Bearer ${aToken}` },
       });
       if (data.success) {
         setDashData(data.dashData);
@@ -93,7 +93,8 @@ const AdminContextProvider = (props) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+    // backendUrl is a constant from env, no need to include in deps
+  }, [aToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const value = {
     appointments,
