@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContextContext";
 
@@ -21,6 +22,7 @@ const Navbar = () => {
     // Đăng xuất: clear token qua AppContext và điều hướng về trang chủ
     setToken("");
     setIsProfileOpen(false);
+    toast.success("Đăng xuất thành công");
     navigate("/");
   };
 

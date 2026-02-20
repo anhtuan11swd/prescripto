@@ -1,8 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @import "tailwindcss";
 
 @theme {
   --color-primary: #5f6fff;
   --grid-template-columns-auto: repeat(auto-fill, minmax(200px, 1fr));
+  --font-family-inter: "Inter", sans-serif;
+}
+
+/* Font family mặc định */
+* {
+  font-family: "Inter", sans-serif;
 }
 
 /* Ẩn scrollbar */
@@ -18,6 +25,6 @@
 /* Responsive cho mobile menu */
 @media (max-width: 740px) {
   .active p {
-    @apply text-white bg-primary;
+    @apply bg-primary text-white;
   }
 }

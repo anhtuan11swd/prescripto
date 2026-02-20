@@ -359,18 +359,18 @@ Authorization: Bearer {{ADMIN_TOKEN}}
 ## Test Scenarios
 
 ### 1. Happy Path Testing
-1. ✅ Login admin thành công
-2. ✅ Thêm bác sĩ mới với đầy đủ thông tin
-3. ✅ Lấy danh sách bác sĩ
-4. ✅ Thay đổi trạng thái bác sĩ
-5. ✅ Xem dashboard thống kê
+1. Login admin thành công
+2. Thêm bác sĩ mới với đầy đủ thông tin
+3. Lấy danh sách bác sĩ
+4. Thay đổi trạng thái bác sĩ
+5. Xem dashboard thống kê
 
 ### 2. Error Testing
-1. ❌ Login với thông tin sai
-2. ❌ Gọi API protected mà không có token
-3. ❌ Thêm bác sĩ thiếu thông tin bắt buộc
-4. ❌ Thêm bác sĩ với email không hợp lệ
-5. ❌ Hủy lịch hẹn không tồn tại
+1. Login với thông tin sai
+2. Gọi API protected mà không có token
+3. Thêm bác sĩ thiếu thông tin bắt buộc
+4. Thêm bác sĩ với email không hợp lệ
+5. Hủy lịch hẹn không tồn tại
 
 ### 3. Edge Cases
 1. 📝 Thêm bác sĩ với address JSON phức tạp

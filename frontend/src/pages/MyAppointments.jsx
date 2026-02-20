@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 import { AppContext } from "../context/AppContextContext";
 
 const MyAppointments = () => {
@@ -38,12 +40,19 @@ const MyAppointments = () => {
     if (!token || !appointmentId) return;
     try {
       setCancellingId(appointmentId);
-      await axios.post(
+      const { data } = await axios.post(
         `${backendURL}/api/user/cancel-appointment`,
         { appointmentId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
+      if (data?.success) {
+        toast.success("Hủy lịch hẹn thành công");
+      } else {
+        toast.error(data?.message || "Hủy lịch hẹn thất bại");
+      }
       await Promise.all([loadAppointments(), getDoctorsData()]);
+    } catch {
+      toast.error("Hủy lịch hẹn thất bại");
     } finally {
       setCancellingId(null);
     }
@@ -52,9 +61,9 @@ const MyAppointments = () => {
   const renderStatusActions = (appointment) => {
     if (appointment.isCompleted) {
       return (
-        <div className="flex flex-col justify-end gap-2 text-center text-sm">
+        <div className="flex flex-col justify-end gap-2 text-sm text-center">
           <button
-            className="sm:min-w-48 rounded border border-emerald-500 py-2 text-emerald-600"
+            className="py-2 border border-emerald-500 rounded sm:min-w-48 text-emerald-600"
             type="button"
           >
             Hoàn thành
@@ -65,9 +74,9 @@ const MyAppointments = () => {
 
     if (appointment.cancelled) {
       return (
-        <div className="flex flex-col justify-end gap-2 text-center text-sm">
+        <div className="flex flex-col justify-end gap-2 text-sm text-center">
           <button
-            className="sm:min-w-48 rounded border border-red-500 py-2 text-red-500"
+            className="py-2 border border-red-500 rounded sm:min-w-48 text-red-500"
             type="button"
           >
             Đã hủy lịch hẹn
@@ -78,15 +87,15 @@ const MyAppointments = () => {
 
     if (!appointment.payment) {
       return (
-        <div className="flex flex-col justify-end gap-2 text-center text-sm">
+        <div className="flex flex-col justify-end gap-2 text-sm text-center">
           <button
-            className="sm:min-w-48 rounded border py-2 text-[#696969] transition-all duration-300 hover:bg-primary hover:text-white"
+            className="hover:bg-primary py-2 border rounded sm:min-w-48 text-[#696969] hover:text-white transition-all duration-300"
             type="button"
           >
             Thanh toán online
           </button>
           <button
-            className="sm:min-w-48 rounded border py-2 text-[#696969] transition-all duration-300 hover:bg-red-600 hover:text-white"
+            className="hover:bg-red-600 py-2 border rounded sm:min-w-48 text-[#696969] hover:text-white transition-all duration-300"
             disabled={cancellingId === appointment._id}
             onClick={() => handleCancel(appointment._id)}
             type="button"
@@ -98,9 +107,9 @@ const MyAppointments = () => {
     }
 
     return (
-      <div className="flex flex-col justify-end gap-2 text-center text-sm">
+      <div className="flex flex-col justify-end gap-2 text-sm text-center">
         <button
-          className="sm:min-w-48 rounded border py-2 text-[#696969]"
+          className="py-2 border rounded sm:min-w-48 text-[#696969]"
           type="button"
         >
           Đã thanh toán
@@ -111,24 +120,22 @@ const MyAppointments = () => {
 
   if (!token) {
     return (
-      <div className="px-4 py-10 text-center text-gray-600 sm:px-10">
+      <div className="px-4 sm:px-10 py-10 text-gray-600 text-center">
         Vui lòng đăng nhập để xem lịch hẹn của bạn.
       </div>
     );
   }
 
   return (
-    <div className="px-4 pb-10 sm:px-10">
-      <p className="mt-12 border-b pb-3 text-lg font-medium text-gray-600">
+    <div className="px-4 sm:px-10 pb-10">
+      <p className="mt-12 pb-3 border-b font-medium text-gray-600 text-lg">
         Lịch hẹn của tôi
       </p>
 
-      {loading && !appointments.length ? (
-        <div className="py-8 text-sm text-gray-500">Đang tải lịch hẹn...</div>
-      ) : null}
+      {loading && !appointments.length ? <Spinner size="lg" /> : null}
 
       {!loading && !appointments.length ? (
-        <div className="py-8 text-sm text-gray-500">
+        <div className="py-8 text-gray-500 text-sm">
           Bạn chưa có lịch hẹn nào.
         </div>
       ) : null}
@@ -142,13 +149,13 @@ const MyAppointments = () => {
 
           return (
             <div
-              className="grid grid-cols-[1fr_2fr] gap-4 border-b py-4 sm:flex sm:gap-6"
+              className="sm:flex gap-4 sm:gap-6 grid grid-cols-[1fr_2fr] py-4 border-b"
               key={appointment._id}
             >
               <div>
                 <img
                   alt={doc.name || "Doctor"}
-                  className="w-36 bg-[#EAEFFF]"
+                  className="bg-[#EAEFFF] w-36"
                   src={
                     doc.image ||
                     "https://raw.githubusercontent.com/avinashdm/gs-images/main/prescripto/doc1.png"
@@ -156,8 +163,8 @@ const MyAppointments = () => {
                 />
               </div>
 
-              <div className="flex-1 text-sm text-[#5E5E5E]">
-                <p className="text-base font-semibold text-[#262626]">
+              <div className="flex-1 text-[#5E5E5E] text-sm">
+                <p className="font-semibold text-[#262626] text-base">
                   {doc.name}
                 </p>
                 <p>{doc.speciality}</p>
@@ -168,7 +175,7 @@ const MyAppointments = () => {
                 ))}
 
                 <p className="mt-1">
-                  <span className="text-sm font-medium text-[#3C3C3C]">
+                  <span className="font-medium text-[#3C3C3C] text-sm">
                     Ngày &amp; giờ:
                   </span>{" "}
                   {slotDateFormat
@@ -178,7 +185,7 @@ const MyAppointments = () => {
                 </p>
               </div>
 
-              <div className="hidden flex-1 sm:block" />
+              <div className="hidden sm:block flex-1" />
 
               {renderStatusActions(appointment)}
             </div>

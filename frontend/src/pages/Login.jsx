@@ -47,6 +47,7 @@ const Login = () => {
         if (data?.success && data?.token) {
           localStorage.setItem("token", data.token);
           setToken(data.token);
+          toast.success("Đăng nhập thành công");
         } else {
           toast.error(data?.message || "Đăng nhập thất bại");
         }

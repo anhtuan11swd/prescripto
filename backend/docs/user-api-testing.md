@@ -439,23 +439,23 @@ Content-Type: application/json
 ## Test Scenarios
 
 ### 1. Happy Path Testing
-1. ✅ Đăng ký tài khoản thành công
-2. ✅ Đăng nhập với thông tin hợp lệ
-3. ✅ Lấy thông tin hồ sơ cá nhân
-4. ✅ Cập nhật hồ sơ với đầy đủ thông tin
-5. ✅ Đặt lịch hẹn với bác sĩ khả dụng
-6. ✅ Xem danh sách lịch hẹn
-7. ✅ Hủy lịch hẹn thành công
+1. Đăng ký tài khoản thành công
+2. Đăng nhập với thông tin hợp lệ
+3. Lấy thông tin hồ sơ cá nhân
+4. Cập nhật hồ sơ với đầy đủ thông tin
+5. Đặt lịch hẹn với bác sĩ khả dụng
+6. Xem danh sách lịch hẹn
+7. Hủy lịch hẹn thành công
 
 ### 2. Error Testing
-1. ❌ Đăng ký với thông tin thiếu
-2. ❌ Đăng ký với email không hợp lệ
-3. ❌ Đăng nhập với thông tin sai
-4. ❌ Gọi API protected mà không có token
-5. ❌ Cập nhật profile thiếu thông tin bắt buộc
-6. ❌ Đặt lịch với bác sĩ không tồn tại
-7. ❌ Đặt lịch với slot đã được đặt
-8. ❌ Hủy lịch hẹn không sở hữu
+1. Đăng ký với thông tin thiếu
+2. Đăng ký với email không hợp lệ
+3. Đăng nhập với thông tin sai
+4. Gọi API protected mà không có token
+5. Cập nhật profile thiếu thông tin bắt buộc
+6. Đặt lịch với bác sĩ không tồn tại
+7. Đặt lịch với slot đã được đặt
+8. Hủy lịch hẹn không sở hữu
 
 ### 3. Edge Cases
 1. 📝 Đặt lịch với address JSON phức tạp

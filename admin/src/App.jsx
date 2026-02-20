@@ -1,5 +1,7 @@
 import { useContext } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { AdminContext } from "./context/AdminContext";
@@ -56,6 +58,18 @@ function App() {
           <Route element={<DoctorProfile />} path="/doctor-profile" />
         </Route>
       </Routes>
+      <ToastContainer
+        autoClose={500}
+        closeOnClick
+        draggable
+        hideProgressBar={false}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="top-right"
+        rtl={false}
+        theme="light"
+      />
     </div>
   );
 }

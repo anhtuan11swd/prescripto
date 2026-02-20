@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContextContext";
 
@@ -182,15 +183,18 @@ const MyProfile = () => {
       if (response.data.success) {
         await loadUserProfileData();
         setIsEditing(false);
+        toast.success("Cập nhật hồ sơ thành công");
+      } else {
+        toast.error(response.data.message || "Cập nhật hồ sơ thất bại");
       }
-    } catch {
-      // Xử lý lỗi im lặng hoặc hiển thị thông báo cho người dùng
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Cập nhật hồ sơ thất bại");
     }
   };
 
   if (!token) {
     return (
-      <div className="max-w-lg flex flex-col gap-2 text-sm pt-5">
+      <div className="flex flex-col gap-2 pt-5 max-w-lg text-sm">
         <p className="text-gray-600">Vui lòng đăng nhập để xem hồ sơ.</p>
       </div>
     );
@@ -198,7 +202,7 @@ const MyProfile = () => {
 
   if (!userData) {
     return (
-      <div className="max-w-lg flex flex-col gap-2 text-sm pt-5">
+      <div className="flex flex-col gap-2 pt-5 max-w-lg text-sm">
         <p className="text-gray-600">Đang tải thông tin hồ sơ...</p>
       </div>
     );
@@ -206,16 +210,16 @@ const MyProfile = () => {
 
   if (!isEditing) {
     return (
-      <div className="max-w-lg flex flex-col gap-2 text-sm pt-5">
-        <img alt={userData.name} className="w-36 rounded" src={displayImage} />
-        <p className="font-medium text-3xl text-[#262626] mt-4">
+      <div className="flex flex-col gap-2 pt-5 max-w-lg text-sm">
+        <img alt={userData.name} className="rounded w-36" src={displayImage} />
+        <p className="mt-4 font-medium text-[#262626] text-3xl">
           {userData.name}
         </p>
-        <hr className="bg-[#ADADAD] h-px border-none" />
+        <hr className="bg-[#ADADAD] border-none h-px" />
 
         <div>
-          <p className="text-gray-600 underline mt-3">THÔNG TIN LIÊN HỆ</p>
-          <div className="grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-[#363636]">
+          <p className="mt-3 text-gray-600 underline">THÔNG TIN LIÊN HỆ</p>
+          <div className="gap-y-2.5 grid grid-cols-[1fr_3fr] mt-3 text-[#363636]">
             <p className="font-medium">Email:</p>
             <p className="text-blue-500">{userData.email}</p>
 
@@ -231,8 +235,8 @@ const MyProfile = () => {
         </div>
 
         <div>
-          <p className="text-[#797979] underline mt-3">THÔNG TIN CƠ BẢN</p>
-          <div className="grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-gray-600">
+          <p className="mt-3 text-[#797979] underline">THÔNG TIN CƠ BẢN</p>
+          <div className="gap-y-2.5 grid grid-cols-[1fr_3fr] mt-3 text-gray-600">
             <p className="font-medium">Giới tính:</p>
             <p className="text-gray-500">{userData.gender || "Chưa chọn"}</p>
 
@@ -243,7 +247,7 @@ const MyProfile = () => {
 
         <div className="mt-10">
           <button
-            className="border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all"
+            className="hover:bg-primary px-8 py-2 border border-primary rounded-full hover:text-white transition-all"
             onClick={handleStartEdit}
             type="button"
           >
@@ -256,15 +260,15 @@ const MyProfile = () => {
 
   return (
     <form
-      className="max-w-lg flex flex-col gap-2 text-sm pt-5"
+      className="flex flex-col gap-2 pt-5 max-w-lg text-sm"
       onSubmit={handleSubmit}
     >
       <label htmlFor="image">
         <div className="inline-block relative cursor-pointer">
-          <img alt="" className="w-36 rounded opacity-75" src={displayImage} />
+          <img alt="" className="opacity-75 rounded w-36" src={displayImage} />
           <img
             alt="Upload"
-            className="w-10 absolute bottom-12 right-12"
+            className="right-12 bottom-12 absolute w-10"
             src={assets.upload_icon}
           />
         </div>
@@ -277,7 +281,7 @@ const MyProfile = () => {
         />
       </label>
       {errors.image && (
-        <p className="text-red-500 text-xs mt-1">{errors.image}</p>
+        <p className="mt-1 text-red-500 text-xs">{errors.image}</p>
       )}
 
       <div>
@@ -288,15 +292,15 @@ const MyProfile = () => {
           value={formData.name}
         />
         {errors.name && (
-          <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+          <p className="mt-1 text-red-500 text-xs">{errors.name}</p>
         )}
       </div>
 
-      <hr className="bg-[#ADADAD] h-px border-none" />
+      <hr className="bg-[#ADADAD] border-none h-px" />
 
       <div>
-        <p className="text-gray-600 underline mt-3">THÔNG TIN LIÊN HỆ</p>
-        <div className="grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-[#363636]">
+        <p className="mt-3 text-gray-600 underline">THÔNG TIN LIÊN HỆ</p>
+        <div className="gap-y-2.5 grid grid-cols-[1fr_3fr] mt-3 text-[#363636]">
           <p className="font-medium">Email:</p>
           <p className="text-blue-500">{userData.email}</p>
 
@@ -312,7 +316,7 @@ const MyProfile = () => {
               value={formData.phone}
             />
             {errors.phone && (
-              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+              <p className="mt-1 text-red-500 text-xs">{errors.phone}</p>
             )}
           </div>
 
@@ -328,7 +332,7 @@ const MyProfile = () => {
               value={formData.address.line1}
             />
             {errors.addressLine1 && (
-              <p className="text-red-500 text-xs mt-1">{errors.addressLine1}</p>
+              <p className="mt-1 text-red-500 text-xs">{errors.addressLine1}</p>
             )}
             <br />
             <input
@@ -341,18 +345,18 @@ const MyProfile = () => {
               value={formData.address.line2}
             />
             {errors.addressLine2 && (
-              <p className="text-red-500 text-xs mt-1">{errors.addressLine2}</p>
+              <p className="mt-1 text-red-500 text-xs">{errors.addressLine2}</p>
             )}
           </div>
         </div>
       </div>
 
       <div>
-        <p className="text-[#797979] underline mt-3">THÔNG TIN CƠ BẢN</p>
-        <div className="grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-gray-600">
+        <p className="mt-3 text-[#797979] underline">THÔNG TIN CƠ BẢN</p>
+        <div className="gap-y-2.5 grid grid-cols-[1fr_3fr] mt-3 text-gray-600">
           <p className="font-medium">Giới tính:</p>
           <select
-            className="max-w-20 bg-gray-50"
+            className="bg-gray-50 max-w-20"
             onChange={(event) =>
               handleBasicChange("gender", event.target.value)
             }
@@ -373,22 +377,22 @@ const MyProfile = () => {
               value={formData.dob}
             />
             {errors.dob && (
-              <p className="text-red-500 text-xs mt-1">{errors.dob}</p>
+              <p className="mt-1 text-red-500 text-xs">{errors.dob}</p>
             )}
           </div>
         </div>
       </div>
 
-      <div className="mt-10 flex gap-3">
+      <div className="flex gap-3 mt-10">
         <button
-          className="border border-gray-300 px-8 py-2 rounded-full hover:bg-gray-100 transition-all"
+          className="hover:bg-gray-100 px-8 py-2 border border-gray-300 rounded-full transition-all"
           onClick={() => setIsEditing(false)}
           type="button"
         >
           Hủy
         </button>
         <button
-          className="border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all"
+          className="hover:bg-primary px-8 py-2 border border-primary rounded-full hover:text-white transition-all"
           type="submit"
         >
           Lưu thông tin

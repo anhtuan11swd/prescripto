@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import About from "./pages/About";
@@ -26,6 +28,15 @@ const App = () => {
         <Route element={<Appointment />} path="/appointment/:docId" />
       </Routes>
       <Footer />
+      <ToastContainer
+        autoClose={500}
+        closeOnClick
+        draggable
+        newestOnTop
+        pauseOnHover={false}
+        position="top-right"
+        theme="light"
+      />
     </div>
   );
 };

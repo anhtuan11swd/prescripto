@@ -1,6 +1,6 @@
 import axios from "axios";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppContext } from "./AppContextContext";
 
 // Mảng tháng tiếng Việt để format slotDate từ backend (format: "ngày_tháng_năm")
@@ -26,6 +26,7 @@ const backendURL =
 export const AppContextProvider = ({ children }) => {
   // Khởi tạo token từ localStorage để duy trì đăng nhập khi reload trang
   const [doctorsArray, setDoctorsArray] = useState([]);
+  const [doctorsLoading, setDoctorsLoading] = useState(true);
   const [token, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : false,
   );
@@ -70,6 +71,8 @@ export const AppContextProvider = ({ children }) => {
       } catch {
         if (cancelled) return;
         setDoctorsArray([]);
+      } finally {
+        if (!cancelled) setDoctorsLoading(false);
       }
     };
 
@@ -142,13 +145,20 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  // Memoize expensive calculations
+  const availableDoctors = useMemo(() => {
+    return doctorsArray.filter((doc) => doc.available !== false);
+  }, [doctorsArray]);
+
   // Context value - export cả doctorsArray và alias doctors để tương thích code cũ
   const value = {
+    availableDoctors,
     backendURL,
     calculateAge,
     currency,
     doctors: doctorsArray, // alias để tránh thay đổi code sử dụng context cũ
     doctorsArray,
+    doctorsLoading,
     formatCurrency,
     getDoctorsData,
     loadUserProfileData,
